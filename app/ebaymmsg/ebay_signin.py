@@ -1,10 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import time
-
-
-username = 'bobsuper-0'
-password = 'julie774'
+from config import ebaypassword, ebayusername
 
 
 def login():
@@ -24,23 +21,19 @@ def login():
 
     try:
         # LOGIN
-        # get the form
-
-
         # login to form
-
         username_form = driver.find_element_by_name("userid")
         username_form.clear()
-        username_form.send_keys(username)
+        username_form.send_keys(ebayusername)
         password_form = driver.find_element_by_name("pass")
         password_form.clear()
-        password_form.send_keys(password)
+        password_form.send_keys(ebaypassword)
         submit = driver.find_element_by_id("sgnBt")
         driver.save_screenshot('login-success.png')
         submit.click()
 
         time.sleep(5)
-        print("logged in as: ", username)
+        print("logged in as: ", ebayusername)
 
     except Exception as e:
         driver.save_screenshot('login-failure.png')

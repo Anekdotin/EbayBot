@@ -1,3 +1,2 @@
-##TODO add headers
-##TODO add external username password sheet
+##TODO add proxy
 ##TODO test login register cookies

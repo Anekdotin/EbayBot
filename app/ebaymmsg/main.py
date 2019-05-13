@@ -5,10 +5,11 @@ from selenium.webdriver.firefox.options import Options
 import time
 
 from app.ebaymmsg.add_name_to_db import addtodatabase
+from config import ebaypassword, ebayusername
 
 
-spam_message = "hello"
-
+spam_message = "hello I was wondoring if you are selling on protosbay.com?" \
+               " I dont like using paypal ... "
 
 
 def main():
@@ -16,7 +17,9 @@ def main():
     options = Options()
     options.headless = True
 
-    driver = webdriver.Firefox(options=options, executable_path="/home/bot/EbayBot/venv/lib/python3.5/geckodriver")
+    driver = webdriver.Firefox(options=options,
+                               executable_path=
+                               "/home/bot/EbayBot/venv/lib/python3.5/geckodriver")
     driver.set_window_size(1280, 850)
 
     # go to find an ending auction
@@ -50,34 +53,33 @@ def main():
         time.sleep(4)
         driver.save_screenshot("2.png")
 
-
-        # LOGIN
-        driver.save_screenshot('0-1.png')
+        # Topic and next button
         username_form = driver.find_element_by_name("userid")
-        username_form.clear()
-        username_form.send_keys(username)
-        password_form = driver.find_element_by_name("pass")
-        password_form.clear()
-        password_form.send_keys(password)
-        submit = driver.find_element_by_id("sgnBt")
-        driver.save_screenshot('login-success.png')
-        submit.click()
+        if username_form is None:
+            other_circle = driver.find_element_by_xpath(
+                '//*[@id="Other"]')
+            other_circle.click()
+        else:
+            # LOGIN
+            driver.save_screenshot('0-1.png')
+            username_form = driver.find_element_by_name("userid")
+            username_form.clear()
+            username_form.send_keys(ebayusername)
+            password_form = driver.find_element_by_name("pass")
+            password_form.clear()
+            password_form.send_keys(ebaypassword)
+            submit = driver.find_element_by_id("sgnBt")
+            driver.save_screenshot('login-success.png')
+            submit.click()
 
-        time.sleep(5)
-        print("logged in as: ", username)
+            time.sleep(5)
+            print("logged in as: ", ebayusername)
 
+            other_circle = driver.find_element_by_xpath(
+                '//*[@id="Other"]')
+            other_circle.click()
     except Exception as e:
         driver.save_screenshot('login-failure.png')
-        print(str(e))
-
-
-    try:
-        driver.save_screenshot('redirectafterlogin.png')
-        # Topic and next button
-        other_circle = driver.find_element_by_xpath(
-            '//*[@id="Other"]')
-        other_circle.click()
-    except Exception as e:
         print(str(e))
 
     time.sleep(1)
@@ -95,14 +97,15 @@ def main():
 
     try:
         # get the username
-        sellerheader = driver.find_element_by_xpath('/html/body/div[4]/div[2]/div[1]/div/div/h1/span').text
+        sellerheader = driver.find_element_by_xpath(
+            '/html/body/div[4]/div[2]/div[1]/div/div/h1/span').text
         print(sellerheader)
 
         listed_name = sellerheader[8:]
         string_of_the_name = str(listed_name)
         print(string_of_the_name)
     except Exception as e:
-        string_of_the_name =  None
+        string_of_the_name = None
         print("*********error finding sellers name*********")
         print(str(e))
 
